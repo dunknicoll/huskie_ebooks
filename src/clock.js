@@ -17,6 +17,8 @@ function announce () {
 
         if(timeCheck=="17:00" && dayCheck==5) {
             sendMessage("Down tools lads");
+        } else if(timeCheck=="17:30" && dayCheck!=5) {
+            sendMessage("Boom ting!")
         }
     }
 
