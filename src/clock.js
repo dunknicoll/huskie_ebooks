@@ -8,6 +8,8 @@ import Log from 'log';
 const log = new Log('clock', fs.createWriteStream('clock.log', { flags: 'a' }));
 
 function announce () {
+    log.info("running");
+
     let hourCheck = moment().tz("Europe/London").format('HH');
     let minuteCheck = moment().tz("Europe/London").format('mm');
     let timeCheck = hourCheck + ":" + minuteCheck;
