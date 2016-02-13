@@ -33,7 +33,7 @@ function sendMessage(message) {
     let twitterConfig = config.get("twitter");
     let client = new Twitter(twitterConfig);
     client.post('statuses/update', {status: message},  (error, tweet, response) => {
-      if(error) throw error;
+      if(error) console.log(error);
     });
 }
 
