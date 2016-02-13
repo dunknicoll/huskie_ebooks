@@ -1,8 +1,7 @@
 import 'babel-polyfill';
 import config from 'config';
 import Twitter from 'twitter';
-import moment from 'moment';
-import 'moment-timezone';
+import moment from 'moment-timezone';
 
 function announce () {
     let hourCheck = moment().tz("Europe/London").format('HH');
