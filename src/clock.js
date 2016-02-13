@@ -4,6 +4,7 @@ import Twitter from 'twitter';
 import moment from 'moment-timezone';
 import fs from 'fs';
 import Log from 'log';
+import {CronJob} from 'cron';
 
 const log = new Log('clock', fs.createWriteStream('clock.log', { flags: 'a' }));
 
@@ -47,4 +48,17 @@ function sendMessage(message) {
     });
 }
 
-announce();
+function main() {
+  let jobSettings = {
+    cronTime: '00 * * * * *',
+    onTick: () => {
+      announce();
+    },
+    start: true,
+    timeZone: 'Europe/London'
+  };
+
+  let job = new CronJob(jobSettings);
+}
+
+main();
