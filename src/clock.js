@@ -14,7 +14,7 @@ const job = {
   timeZone: 'Europe/London'
 };
 
-const debug = false;
+const debug = true;
 
 function sendMessage(message) {
   log.info("Running");
@@ -43,19 +43,19 @@ function bangMessage() {
 
 function main() {
 
-  let hourlyJobSettings = Object.assign({}, job);
+  let hourlyJobSettings = {...job};
   hourlyJobSettings.cronTime = '00 00 * * * *';
   hourlyJobSettings.onTick = bangMessage;
 
-  let morningSettings = Object.assign({}, job);
+  let morningSettings = {...job};
   morningSettings.cronTime = '00 15 09 * * 1-5';
   morningSettings.onTick = () => { sendMessage("Nice of you to join us") };
 
-  let fridaySettings = Object.assign({}, job);
+  let fridaySettings = {...job};
   fridaySettings.cronTime = '00 00 17 * * 5';
   fridaySettings.onTick = () => { sendMessage("Down tools lads") };
 
-  let monThursSettings = Object.assign({}, job);
+  let monThursSettings = {...job};
   monThursSettings.cronTime = '00 30 17 * * 1-4';
   monThursSettings.onTick = () => { sendMessage("Boom ting!") };
 
