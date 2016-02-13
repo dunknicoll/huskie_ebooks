@@ -1,0 +1,28 @@
+{
+  "name": "hclock",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/clock.js",
+  "preferGlobal": true,
+  "bin": {
+    "clock": "./build/clock.js"
+  },
+  "scripts": {
+    "build": "babel src/ --out-dir build/",
+    "postinstall": "npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-polyfill": "^6.3.14",
+    "config": "^1.19.0",
+    "moment-timezone": "^0.5.0",
+    "twitter": "^1.2.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.4.0",
+    "babel-core": "^6.4.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13"
+  }
+}
