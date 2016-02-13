@@ -6,65 +6,64 @@ import fs from 'fs';
 import Log from 'log';
 import { CronJob } from 'cron';
 
-const log = new Log('clock', fs.createWriteStream('clock.log', {
-  flags: 'a'
-}));
+const log = new Log('clock', fs.createWriteStream('clock.log', { flags: 'a' }));
+const job = {
+  cronTime: '',
+  onTick: () => {},
+  start: true,
+  timeZone: 'Europe/London'
+};
 
-function announce() {
-  log.info("running");
+const debug = false;
 
-  let hourCheck = moment().tz("Europe/London").format('HH');
-  let minuteCheck = moment().tz("Europe/London").format('mm');
-  let timeCheck = hourCheck + ":" + minuteCheck;
-  let dayCheck = moment().tz("Europe/London").day();
+function sendMessage(message) {
+  log.info("Running");
 
-  if (dayCheck != 0 && dayCheck != 6) {
-
-    if (timeCheck == "09:15") {
-      sendMessage("Nice of you to join us");
-    }
-
-    if (timeCheck == "17:00" && dayCheck == 5) {
-      sendMessage("Down tools lads");
-    } else if (timeCheck == "17:30" && dayCheck != 5) {
-      sendMessage("Boom ting!")
-    }
-  }
-
-  if (minuteCheck == "00") {
-    let hour = moment().tz("Europe/London").format('h');
-    let bangString = Array.from({
-      length: hour
-    }, x => "bang!").join(" ");
-    sendMessage(bangString);
+  if(!debug){
+    let twitterConfig = config.get("twitter");
+    let client = new Twitter(twitterConfig);
+    client.post('statuses/update', { status: message }, 
+      (error, tweet, response) => {
+        if (error) {
+          log.error(error);
+        } else {
+          log.info(message);
+        }
+    });
+  } else {
+    console.log(message);
   }
 }
 
-function sendMessage(message) {
-  let twitterConfig = config.get("twitter");
-  let client = new Twitter(twitterConfig);
-  client.post('statuses/update', {
-    status: message
-  }, (error, tweet, response) => {
-    if (error) {
-      log.error(error);
-    } else {
-      log.info(message);
-    }
-  });
+function bangMessage() {
+  let hour = moment().tz("Europe/London").format('h');
+  let bangString = Array.from({ length: hour }, x => "bang!").join(" ");
+  sendMessage(bangString);
 }
 
 function main() {
-  let jobSettings = {
-    cronTime: '00 * * * * *',
-    onTick: () => {
-      announce();
-    },
-    start: true,
-    timeZone: 'Europe/London'
-  };
 
-  let job = new CronJob(jobSettings);
+  let hourlyJobSettings = Object.assign({}, job);
+  hourlyJobSettings.cronTime = '00 00 * * * *';
+  hourlyJobSettings.onTick = bangMessage;
+
+  let morningSettings = Object.assign({}, job);
+  morningSettings.cronTime = '00 15 09 * * 1-5';
+  morningSettings.onTick = () => { sendMessage("Nice of you to join us") };
+
+  let fridaySettings = Object.assign({}, job);
+  fridaySettings.cronTime = '00 00 17 * * 5';
+  fridaySettings.onTick = () => { sendMessage("Down tools lads") };
+
+  let monThursSettings = Object.assign({}, job);
+  monThursSettings.cronTime = '00 30 17 * * 1-4';
+  monThursSettings.onTick = () => { sendMessage("Boom ting!") };
+
+  let hourlyJob = new CronJob(hourlyJobSettings);
+  let morningJob = new CronJob(morningSettings);
+  let fridayJob = new CronJob(fridaySettings);
+  let monThursJob = new CronJob(monThursSettings);
+
 }
 
 main();
