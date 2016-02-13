@@ -14,7 +14,7 @@ const job = {
   timeZone: 'Europe/London'
 };
 
-const debug = true;
+const debug = false;
 
 function sendMessage(message) {
   log.info("Running");
