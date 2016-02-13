@@ -1,4 +1,5 @@
 # Logs
+clock.log
 logs
 *.log
 npm-debug.log*
