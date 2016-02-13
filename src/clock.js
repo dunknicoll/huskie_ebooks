@@ -2,6 +2,9 @@ import 'babel-polyfill';
 import config from 'config';
 import Twitter from 'twitter';
 import moment from 'moment-timezone';
+import Log from 'log';
+
+const log = new Log('clock');
 
 function announce () {
     let hourCheck = moment().tz("Europe/London").format('HH');
@@ -33,7 +36,11 @@ function sendMessage(message) {
     let twitterConfig = config.get("twitter");
     let client = new Twitter(twitterConfig);
     client.post('statuses/update', {status: message},  (error, tweet, response) => {
-      if(error) console.log(error);
+      if(error) {
+        log(error);
+      } else {
+        log(message);
+      }
     });
 }
 
