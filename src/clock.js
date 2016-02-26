@@ -6,6 +6,7 @@ import fs from 'fs';
 import Log from 'log';
 import { CronJob } from 'cron';
 
+
 const log = new Log('clock', fs.createWriteStream('clock.log', { flags: 'a' }));
 const job = {
   cronTime: '',
@@ -13,6 +14,23 @@ const job = {
   start: true,
   timeZone: 'Europe/London'
 };
+
+const pals = [
+  "@stevenkelly87",
+  "@dunknicoll",
+  "@RossMcMillan92",
+  "@Jordan_McQuade",
+  "@Soutar",
+  "@albertkawmi",
+  "@gregmcausland",
+  "@anchor4",
+  "@Ates_Tee_Em_El",
+  "@ndedesigns",
+  "@jroebu14",
+  "@darrenjmc"
+]
+
+const huskie = "@darrenhuskie"
 
 const debug = false;
 
@@ -22,7 +40,7 @@ function sendMessage(message) {
   if(!debug){
     let twitterConfig = config.get("twitter");
     let client = new Twitter(twitterConfig);
-    client.post('statuses/update', { status: message }, 
+    client.post('statuses/update', { status: message },
       (error, tweet, response) => {
         if (error) {
           log.error(error);
@@ -41,6 +59,12 @@ function bangMessage() {
   sendMessage(bangString);
 }
 
+function doubleAct() {
+  let randomPal = pals[Math.floor(Math.random()*pals.length)];
+  let palString = `Right ${randomPal}, you and me the old double act. ${huskie}`
+  sendMessage(palString);
+}
+
 function main() {
 
   let hourlyJobSettings = {...job};
@@ -50,6 +74,10 @@ function main() {
   let morningSettings = {...job};
   morningSettings.cronTime = '00 15 09 * * 1-5';
   morningSettings.onTick = () => { sendMessage("Nice of you to join us") };
+
+  let afternoonSettings = {...job};
+  afternoonSettings.cronTime = '00 30 14 * * 1-5';
+  afternoonSettings.onTick = doubleAct;
 
   let fridaySettings = {...job};
   fridaySettings.cronTime = '00 00 17 * * 5';
@@ -61,6 +89,7 @@ function main() {
 
   let hourlyJob = new CronJob(hourlyJobSettings);
   let morningJob = new CronJob(morningSettings);
+  let afternoonJob = new CronJob(afternoonSettings);
   let fridayJob = new CronJob(fridaySettings);
   let monThursJob = new CronJob(monThursSettings);
 
