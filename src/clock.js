@@ -63,7 +63,7 @@ function main() {
   morningSettings.onTick = () => { sendMessage("Nice of you to join us") };
 
   let afternoonSettings = {...job};
-  afternoonSettings.cronTime = '*/2 * * * * *';
+  afternoonSettings.cronTime = '00 30 14 * * 1-5';
   afternoonSettings.onTick = doubleAct;
 
   let fridaySettings = {...job};
