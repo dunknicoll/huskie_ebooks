@@ -9,5 +9,12 @@
     "@",
     "@"
   ],
-  "huskie" : "@"
+  "huskie" : "@",
+  "lunchChat": [
+      "I'd have that again",
+      "That was rare",
+      "That was a sweet dream",
+      "That was a rare treat",
+      "That was a succulent meal"
+  ]
 }

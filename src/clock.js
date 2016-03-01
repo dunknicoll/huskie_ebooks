@@ -16,7 +16,7 @@ const job = {
 };
 
 const pals = config.get("usernames");
-
+const lunchChat = config.get("lunchChat");
 const huskie = config.get("huskie");
 
 const debug = false;
@@ -52,6 +52,11 @@ function doubleAct() {
   sendMessage(palString);
 }
 
+function postLunch() {
+  let randomChat = lunchChat[Math.floor(Math.random()*lunchChat.length)];
+  sendMessage(randomChat);
+}
+
 function main() {
 
   let hourlyJobSettings = {...job};
@@ -61,6 +66,10 @@ function main() {
   let morningSettings = {...job};
   morningSettings.cronTime = '00 15 09 * * 1-5';
   morningSettings.onTick = () => { sendMessage("Nice of you to join us") };
+  
+  let lunchSettings = {...job};
+  lunchSettings.cronTime = '00 30 13 * * 1-5';
+  lunchSettings.onTick = postLunch;
 
   let afternoonSettings = {...job};
   afternoonSettings.cronTime = '00 30 14 * * 1-5';
@@ -76,6 +85,7 @@ function main() {
 
   let hourlyJob = new CronJob(hourlyJobSettings);
   let morningJob = new CronJob(morningSettings);
+  let lunchJob = new CronJob(lunchSettings);
   let afternoonJob = new CronJob(afternoonSettings);
   let fridayJob = new CronJob(fridaySettings);
   let monThursJob = new CronJob(monThursSettings);
